@@ -1,0 +1,20 @@
+---
+Name: apiroutes
+After:
+  - "#rootroutes"
+---
+SilverStripe\Control\Director:
+  rules:
+    "api/auth//$Action": 'App\Controllers\AuthAPIController'
+    "api/user//$Action": 'App\Controllers\UserAPIController'
+    "api/products//$Action": 'App\Controllers\ProductAPIController'
+    "reset-password": 'App\Controllers\ResetPasswordController'
+
+    # Payment API Routes
+    "api/payment//$Action/$ID": 'App\Controllers\PaymentAPIController'
+    "api/order/create": 'App\Controllers\OrderAPIController->createOrder'
+    "api/duitku/callback": 'App\Controllers\OrderAPIController->handleCallback'
+    "api/address//$Action/$ID": 'App\Controllers\ApiAddressController'
+    "api/cart//$Action": 'App\Controllers\CartAPIController'
+    "api/utils//$Action": 'App\Controllers\UtilsAPIController'
+    "payment//$Action/$ID": 'App\Controllers\PaymentController'

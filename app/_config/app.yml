@@ -1,0 +1,16 @@
+---
+Name: cobaAPI
+---
+SilverStripe\Core\Manifest\ModuleManifest:
+  project: app
+
+SilverStripe\SiteConfig\SiteConfig:
+  extensions:
+    - App\Extensions\ShopConfigExtension
+    - App\Extensions\SiteConfigExtension
+
+SilverStripe\Core\Injector\Injector:
+  App\Services\RajaOngkirService:
+    constructor:
+      apiKey: "`KOMERCE_API_KEY`"
+      apiUrl: "`KOMERCE_API_URL`"
