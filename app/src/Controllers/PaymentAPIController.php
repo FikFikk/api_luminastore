@@ -37,8 +37,8 @@ class PaymentAPIController extends BaseController
     private $merchantKey = '19fb4bce607511f15b207adb99272846';
     private $merchantCode = 'DS24488';
     private $apiUrl = 'https://sandbox.duitku.com/webapi/api/merchant/v2/inquiry'; // sandbox
-    private $callbackUrl = 'https://8390781e9a32.ngrok-free.app/api/payment/callback';
-    private $returnUrl = 'https://8390781e9a32.ngrok-free.app/payment/return';
+    private $callbackUrl = 'https://admin-fikri-shop.jasamobileapp.com/api/payment/callback';
+    private $returnUrl = 'https://admin-fikri-shop.jasamobileapp.com/payment/return';
 
     // private $rajaOngkirApiKey  = 'TJjGC1vo902905ba249532de9ghTh1yV';
     private $rajaOngkirApiKey  = '55debe1527da557278552dc3007fbbf3'; //ct Account
