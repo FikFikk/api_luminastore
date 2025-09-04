@@ -1414,7 +1414,7 @@ class PaymentAPIController extends BaseController
             'customerPhone' => $phoneNumber,
             'callbackUrl' => $this->callbackUrl,
             'returnUrl' => $this->returnUrl,
-            'expiryPeriod' => 10,
+            'expiryPeriod' => 1440,
             'signature' => md5($this->merchantCode . $merchantOrderId . $amount . $this->merchantKey)
         ];
 
