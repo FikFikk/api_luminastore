@@ -544,6 +544,12 @@ class PaymentAPIController extends BaseController
                     'shipping_status' => $order->ShippingStatus,
                     'created_at' => $order->Created,
                     'updated_at' => $order->LastEdited,
+                    'expired_at' => $order->ExpiredAt,
+                    'is_expired' => (
+                        $order->PaymentStatus === 'pending'
+                        && !empty($order->ExpiredAt)
+                        && strtotime($order->ExpiredAt) < time()
+                    ),
 
                     // Financial details
                     'total_price' => (float)$order->TotalPrice,
@@ -790,6 +796,9 @@ class PaymentAPIController extends BaseController
                 'is_paid' => $order->PaymentStatus === 'paid',
                 'is_delivered' => $order->ShippingStatus === 'delivered',
 
+                'expired_at' => $order->ExpiredAt,
+                'is_expired' => ($order->PaymentStatus === 'pending' && strtotime($order->ExpiredAt) < time()),
+
                 // Tracking info (jika ada sistem tracking)
                 'tracking_number' => $order->TrackingNumber ?? null,
                 'tracking_url' => $order->TrackingNumber ? $this->getTrackingUrl($order->Courier, $order->TrackingNumber) : null
@@ -1019,6 +1028,7 @@ class PaymentAPIController extends BaseController
 
             $shippingCost = $selectedShippingOption['cost'];
             $finalTotal = $totalPrice + $shippingCost;
+            $expiryPeriod = 1440;
 
             // Buat order
             $order = Order::create();
@@ -1027,6 +1037,7 @@ class PaymentAPIController extends BaseController
             $order->TotalPrice = $finalTotal;
             $order->ShippingCost = $shippingCost;
             $order->Fee = 0;
+            $order->ExpiredAt = date('Y-m-d H:i:s', strtotime("+$expiryPeriod minutes"));;
             $order->Courier = $courier;
             $order->Service = $service;
             $order->ETD = $selectedShippingOption['etd']; // Simpan ETD mentah dari RajaOngkir

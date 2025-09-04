@@ -24,7 +24,8 @@ class Order extends DataObject
         'ETD' => 'Varchar(50)',
         'PaymentUrl'     => 'Text',
         'Notes'     => 'Varchar(255)',
-        'Fee'     => 'Decimal(12,2)'
+        'Fee'     => 'Decimal(12,2)',
+        "ExpiredAt" => "Datetime"
     ];
 
     private static $has_one = [
