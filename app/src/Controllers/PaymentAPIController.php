@@ -747,6 +747,13 @@ class PaymentAPIController extends BaseController
                 }
             }
 
+            // Check if order is expired - FIXED: Handle null ExpiredAt
+            $isExpired = false;
+            if ($order->PaymentStatus === 'pending' && !empty($order->ExpiredAt)) {
+                $expiredTimestamp = strtotime($order->ExpiredAt);
+                $isExpired = $expiredTimestamp !== false && $expiredTimestamp < time();
+            }
+
             // Siapkan response data
             $responseData = [
                 'order' => [
@@ -797,7 +804,7 @@ class PaymentAPIController extends BaseController
                 'is_delivered' => $order->ShippingStatus === 'delivered',
 
                 'expired_at' => $order->ExpiredAt,
-                'is_expired' => ($order->PaymentStatus === 'pending' && strtotime($order->ExpiredAt) < time()),
+                'is_expired' => $isExpired, // FIXED: Use the safely calculated $isExpired
 
                 // Tracking info (jika ada sistem tracking)
                 'tracking_number' => $order->TrackingNumber ?? null,
