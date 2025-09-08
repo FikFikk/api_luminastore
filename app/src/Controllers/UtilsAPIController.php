@@ -92,6 +92,7 @@ class UtilsAPIController extends BaseController
         try {
             $siteConfig = SiteConfig::current_site_config();
 
+            // About image
             $aboutImageData = null;
             if ($siteConfig->AboutImage()->exists()) {
                 $aboutImage = $siteConfig->AboutImage();
@@ -103,6 +104,18 @@ class UtilsAPIController extends BaseController
                 ];
             }
 
+            // Favicon
+            $faviconData = null;
+            if ($siteConfig->Favicon()->exists()) {
+                $favicon = $siteConfig->Favicon();
+                $faviconData = [
+                    'small' => $favicon->ScaleWidth(32)->getAbsoluteURL(),   // biasanya ukuran favicon kecil
+                    'medium' => $favicon->ScaleWidth(64)->getAbsoluteURL(),
+                    'large' => $favicon->ScaleWidth(128)->getAbsoluteURL(),
+                    'original' => $favicon->getAbsoluteURL()
+                ];
+            }
+
             $data = [
                 'site_name' => $siteConfig->Title,
                 'tagline' => $siteConfig->Tagline,
@@ -111,28 +124,7 @@ class UtilsAPIController extends BaseController
                     'content' => $siteConfig->AboutContent,
                     'image' => $aboutImageData
                 ],
-                'features' => [
-                    [
-                        'icon' => '/assets/images/truck.svg',
-                        'title' => 'Fast & Free Shipping',
-                        'description' => 'Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit.'
-                    ],
-                    [
-                        'icon' => '/assets/images/bag.svg',
-                        'title' => 'Easy to Shop',
-                        'description' => 'Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit.'
-                    ],
-                    [
-                        'icon' => '/assets/images/support.svg',
-                        'title' => '24/7 Support',
-                        'description' => 'Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit.'
-                    ],
-                    [
-                        'icon' => '/assets/images/return.svg',
-                        'title' => 'Hassle Free Returns',
-                        'description' => 'Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit.'
-                    ]
-                ]
+                'favicon' => $faviconData
             ];
 
             return $this->jsonResponse($data);
@@ -140,6 +132,7 @@ class UtilsAPIController extends BaseController
             return $this->jsonError('Failed to fetch site configuration: ' . $e->getMessage(), 500);
         }
     }
+
 
     /**
      * Get latest products

@@ -24,7 +24,8 @@ class SiteConfigExtension extends DataExtension
     ];
 
     private static $has_one = [
-        'AboutImage' => Image::class
+        'AboutImage' => Image::class,
+        'Favicon' => Image::class,
     ];
 
     private static $has_many = [
@@ -32,7 +33,8 @@ class SiteConfigExtension extends DataExtension
     ];
 
     private static $owns = [
-        'AboutImage'
+        'AboutImage',
+        'Favicon'
     ];
 
     public function updateCMSFields(FieldList $fields)
@@ -52,6 +54,14 @@ class SiteConfigExtension extends DataExtension
                 $this->owner->CarouselSlides()->sort('Sort ASC'),
                 $carouselConfig
             )
+        ]);
+
+        // About Us Section Tab
+        $fields->addFieldsToTab('Root.Main', [
+            UploadField::create('Favicon', 'Favicon')
+                ->setFolderName('favicon')
+                ->setAllowedExtensions(['jpg', 'jpeg', 'png', 'gif'])
+                ->setAllowedMaxFileNumber(1)
         ]);
 
         // About Us Section Tab
