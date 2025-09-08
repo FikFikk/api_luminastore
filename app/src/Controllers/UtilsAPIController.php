@@ -83,10 +83,15 @@ class UtilsAPIController extends BaseController
             return $this->jsonError('Method not allowed', 405);
         }
 
-        // Authorize request
-        [$member, $authError] = $this->authorizeRequest($request);
-        if ($authError) {
-            return $authError;
+        // Hanya cek API Key (tanpa token user)
+        $apiKey = $request->getHeader('X-API-Key');
+        if (!$apiKey) {
+            return $this->jsonError('Missing API Key', 403);
+        }
+
+        $client = APIClient::get()->filter('API_KEY', $apiKey)->first();
+        if (!$client) {
+            return $this->jsonError('Invalid API Key', 403);
         }
 
         try {
@@ -109,7 +114,7 @@ class UtilsAPIController extends BaseController
             if ($siteConfig->Favicon()->exists()) {
                 $favicon = $siteConfig->Favicon();
                 $faviconData = [
-                    'small' => $favicon->ScaleWidth(32)->getAbsoluteURL(),   // biasanya ukuran favicon kecil
+                    'small' => $favicon->ScaleWidth(32)->getAbsoluteURL(),
                     'medium' => $favicon->ScaleWidth(64)->getAbsoluteURL(),
                     'large' => $favicon->ScaleWidth(128)->getAbsoluteURL(),
                     'original' => $favicon->getAbsoluteURL()
